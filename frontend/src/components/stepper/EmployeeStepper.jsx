@@ -428,19 +428,15 @@ function EmployeeStepper(){
 
         // Remove File objects before Redux
 
-        const reduxData={
+       const reduxData={
 
-          ...finalData,
+ ...finalData,
 
+ profilePhoto: finalData.profilePhoto,
 
-          profilePhoto:
-          finalData.profilePhoto?.name || "",
+ resume: finalData.resume?.name || ""
 
-
-          resume:
-          finalData.resume?.name || ""
-
-        };
+};
 
 
 
@@ -449,10 +445,15 @@ function EmployeeStepper(){
 
 
 
-        dispatch(
-          saveFormData(reduxData)
-        );
+       dispatch(
+ saveFormData({
+   ...reduxData,
+   profilePhoto: finalData.profilePhoto.name
+ })
+);
 
+
+setSubmittedData(finalData);
 
 
 

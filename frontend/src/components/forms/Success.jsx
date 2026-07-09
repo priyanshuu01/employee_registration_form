@@ -5,106 +5,108 @@ import {
   Grid
 } from "@mui/material";
 
-
-function Success({employeeData}) {
-
-
-  const downloadPDF = ()=>{
+import jsPDF from "jspdf";
 
 
-    const content = `
-
-Employee Registration Details
-
-Public ID:
-${employeeData.publicId}
-
-
-Name:
-${employeeData.firstName} ${employeeData.lastName}
-
-
-Email:
-${employeeData.email}
-
-
-Phone:
-${employeeData.phone}
-
-
-Gender:
-${employeeData.gender}
-
-
-Blood Group:
-${employeeData.bloodGroup}
-
-
-Address:
-${employeeData.address}
-
-
-City:
-${employeeData.city}
-
-
-State:
-${employeeData.state}
-
-
-Country:
-${employeeData.country}
-
-
-Employee ID:
-${employeeData.employeeId}
-
-
-Department:
-${employeeData.department}
-
-
-Job Type:
-${employeeData.jobType}
-
-
-Salary:
-${employeeData.salary}
-
-
-Profile Photo:
-${employeeData.profilePhoto}
-
-
-Resume:
-${employeeData.resume}
-
-`;
+function Success({ employeeData }) {
 
 
 
-    const blob = new Blob(
-      [content],
-      {
-        type:"text/plain"
-      }
+  const createDetails = (pdf) => {
+
+
+    pdf.setFontSize(12);
+
+
+    let y = 45;
+
+
+
+    const details = [
+
+
+      ["Public ID", employeeData.publicId],
+
+
+      [
+        "Name",
+        `${employeeData.firstName} ${employeeData.lastName}`
+      ],
+
+
+      ["Email", employeeData.email],
+
+
+      ["Phone", employeeData.phone],
+
+
+      ["Gender", employeeData.gender],
+
+
+      ["Blood Group", employeeData.bloodGroup],
+
+
+      ["Address", employeeData.address],
+
+
+      ["City", employeeData.city],
+
+
+      ["State", employeeData.state],
+
+
+      ["Country", employeeData.country],
+
+
+      ["Pincode", employeeData.pincode],
+
+
+      ["Employee ID", employeeData.employeeId],
+
+
+      ["Department", employeeData.department],
+
+
+      ["Job Type", employeeData.jobType],
+
+
+      ["Salary", employeeData.salary],
+
+
+      ["Resume", employeeData.resume]
+
+    ];
+
+
+
+
+    details.forEach((item)=>{
+
+
+      pdf.text(
+
+        `${item[0]} : ${item[1] || ""}`,
+
+        20,
+
+        y
+
+      );
+
+
+      y += 10;
+
+
+    });
+
+
+
+
+    pdf.save(
+
+      `${employeeData.publicId}_Employee_Registration.pdf`
+
     );
-
-
-    const url = URL.createObjectURL(blob);
-
-
-
-    const link=document.createElement("a");
-
-
-    link.href=url;
-
-    link.download=
-    `${employeeData.publicId}.txt`;
-
-
-    link.click();
 
 
   };
@@ -113,7 +115,102 @@ ${employeeData.resume}
 
 
 
+
+
+
+  const generatePDF = () => {
+
+
+    const pdf = new jsPDF();
+
+
+
+    pdf.setFontSize(18);
+
+
+    pdf.text(
+
+      "Employee Registration Details",
+
+      55,
+
+      20
+
+    );
+
+
+
+
+
+
+    // If photo exists
+
+    if(employeeData.profilePhoto instanceof File){
+
+
+
+      const reader = new FileReader();
+
+
+
+      reader.readAsDataURL(
+        employeeData.profilePhoto
+      );
+
+
+
+      reader.onload = ()=>{
+
+
+        pdf.addImage(
+
+          reader.result,
+
+          "JPEG",
+
+          150,
+
+          30,
+
+          40,
+
+          40
+
+        );
+
+
+
+        createDetails(pdf);
+
+
+      };
+
+
+
+    }
+
+    else{
+
+
+      createDetails(pdf);
+
+
+    }
+
+
+
+  };
+
+
+
+
+
+
+
+
+
 return (
+
 
 <Grid container spacing={3}>
 
@@ -146,6 +243,8 @@ textAlign:"center"
 
 
 
+
+
 <Typography
 
 variant="h6"
@@ -158,6 +257,8 @@ mt:3
 
 Employee Name:
 
+{" "}
+
 {employeeData.firstName}
 
 {" "}
@@ -166,6 +267,7 @@ Employee Name:
 
 
 </Typography>
+
 
 
 
@@ -183,29 +285,13 @@ mt:2
 
 Public ID:
 
+{" "}
+
 {employeeData.publicId}
 
 
 </Typography>
 
-
-
-
-
-
-
-<Typography
-
-sx={{
-mt:2
-}}
-
->
-
-Your documents have been saved successfully.
-
-
-</Typography>
 
 
 
@@ -222,12 +308,11 @@ mt:3
 
 }}
 
-onClick={downloadPDF}
+onClick={generatePDF}
 
 >
 
-Download Registration PDF
-
+Download Employee PDF
 
 </Button>
 
