@@ -1,24 +1,58 @@
 const express = require("express");
+
 const router = express.Router();
 
-const upload = require("../middleware/upload");
-const { employeeValidation } = require("../middleware/validation");
+
 const {
-  createEmployee,
-  getEmployees,
-  updateEmployee,
-  deleteEmployee
+
+    createEmployee,
+    getEmployees,
+    getEmployeeById,
+    updateEmployee,
+    deleteEmployee
+
 } = require("../controllers/employeeController");
 
+
+
+// CREATE EMPLOYEE
 router.post(
-  "/",
-  upload.single("photo"),
-  employeeValidation,
-  createEmployee
+    "/",
+    createEmployee
 );
 
-router.get("/", getEmployees);
-router.put("/:id", updateEmployee);
-router.delete("/:id", deleteEmployee);
+
+
+// GET ALL EMPLOYEES
+router.get(
+    "/",
+    getEmployees
+);
+
+
+
+// GET SINGLE EMPLOYEE
+router.get(
+    "/:id",
+    getEmployeeById
+);
+
+
+
+// UPDATE EMPLOYEE
+router.put(
+    "/:id",
+    updateEmployee
+);
+
+
+
+// DELETE EMPLOYEE
+router.delete(
+    "/:id",
+    deleteEmployee
+);
+
+
 
 module.exports = router;

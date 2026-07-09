@@ -1,43 +1,317 @@
 const Employee = require("../models/Employee");
-const { validationResult } = require("express-validator");
 
-// CREATE
+
+// CREATE EMPLOYEE
+
 exports.createEmployee = async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty())
-      return res.status(400).json({ errors: errors.array() });
 
-    const employee = new Employee({
-      ...req.body,
-      photo: req.file ? req.file.filename : null
-    });
+    try {
 
-    await employee.save();
-    res.status(201).json(employee);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+
+        const employeeData = {
+
+            ...req.body,
+
+
+            profilePhoto:
+                req.files?.profilePhoto
+                ? req.files.profilePhoto[0].filename
+                : null,
+
+
+            resume:
+                req.files?.resume
+                ? req.files.resume[0].filename
+                : null
+
+        };
+
+
+
+        const employee = await Employee.create(
+            employeeData
+        );
+
+
+
+        res.status(201).json({
+
+            success:true,
+
+            message:"Employee created successfully",
+
+            employee
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
 };
 
-// READ
-exports.getEmployees = async (req, res) => {
-  const data = await Employee.find();
-  res.json(data);
+
+
+
+
+
+
+// GET ALL EMPLOYEES
+
+
+exports.getEmployees = async(req,res)=>{
+
+
+    try{
+
+
+        const employees = await Employee.find();
+
+
+
+        res.status(200).json({
+
+            success:true,
+
+            employees
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
+
 };
 
-// UPDATE
-exports.updateEmployee = async (req, res) => {
-  const updated = await Employee.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.json(updated);
+
+
+
+
+
+
+
+
+// GET SINGLE EMPLOYEE
+
+
+exports.getEmployeeById = async(req,res)=>{
+
+
+    try{
+
+
+        const employee = await Employee.findById(
+            req.params.id
+        );
+
+
+
+        if(!employee){
+
+            return res.status(404).json({
+
+                success:false,
+
+                message:"Employee not found"
+
+            });
+
+        }
+
+
+
+        res.status(200).json({
+
+            success:true,
+
+            employee
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
+
 };
 
-// DELETE
-exports.deleteEmployee = async (req, res) => {
-  await Employee.findByIdAndDelete(req.params.id);
-  res.json({ message: "Employee deleted" });
+
+
+
+
+
+
+
+
+// UPDATE EMPLOYEE
+
+
+exports.updateEmployee = async(req,res)=>{
+
+
+    try{
+
+
+        const employee = await Employee.findByIdAndUpdate(
+
+            req.params.id,
+
+            req.body,
+
+            {
+                new:true,
+                runValidators:true
+            }
+
+        );
+
+
+
+        if(!employee){
+
+            return res.status(404).json({
+
+                success:false,
+
+                message:"Employee not found"
+
+            });
+
+        }
+
+
+
+        res.status(200).json({
+
+            success:true,
+
+            message:"Employee updated successfully",
+
+            employee
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
+
+};
+
+
+
+
+
+
+
+
+
+// DELETE EMPLOYEE
+
+
+exports.deleteEmployee = async(req,res)=>{
+
+
+    try{
+
+
+        const employee = await Employee.findByIdAndDelete(
+            req.params.id
+        );
+
+
+
+        if(!employee){
+
+            return res.status(404).json({
+
+                success:false,
+
+                message:"Employee not found"
+
+            });
+
+        }
+
+
+
+        res.status(200).json({
+
+            success:true,
+
+            message:"Employee deleted successfully"
+
+        });
+
+
+
+    }
+    catch(error){
+
+
+        res.status(500).json({
+
+            success:false,
+
+            message:error.message
+
+        });
+
+
+    }
+
+
 };
