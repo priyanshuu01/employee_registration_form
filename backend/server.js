@@ -34,6 +34,10 @@ app.use(
     express.json()
 );
 
+app.use(
+ "/uploads",
+ express.static("uploads")
+);
 
 
 // For handling form-data files later

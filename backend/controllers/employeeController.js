@@ -3,68 +3,71 @@ const Employee = require("../models/Employee");
 
 // CREATE EMPLOYEE
 
-exports.createEmployee = async (req, res) => {
-
-    try {
+exports.createEmployee = async(req,res)=>{
 
 
-        const employeeData = {
-
-            ...req.body,
+try{
 
 
-            profilePhoto:
-                req.files?.profilePhoto
-                ? req.files.profilePhoto[0].filename
-                : null,
+const employee = await Employee.create({
+
+    ...req.body,
 
 
-            resume:
-                req.files?.resume
-                ? req.files.resume[0].filename
-                : null
+    profilePhoto:
 
-        };
+    req.files.profilePhoto
+    ?
+    req.files.profilePhoto[0].path
+    :
+    null,
 
 
 
-        const employee = await Employee.create(
-            employeeData
-        );
+    resume:
+
+    req.files.resume
+    ?
+    req.files.resume[0].path
+    :
+    null
+
+
+});
 
 
 
-        res.status(201).json({
-
-            success:true,
-
-            message:"Employee created successfully",
-
-            employee
-
-        });
 
 
+res.status(201).json({
 
-    }
-    catch(error){
+success:true,
 
+message:"Employee created successfully",
 
-        res.status(500).json({
+employee
 
-            success:false,
-
-            message:error.message
-
-        });
+});
 
 
-    }
+}
+
+catch(error){
+
+
+res.status(500).json({
+
+success:false,
+
+message:error.message
+
+});
+
+
+}
+
 
 };
-
-
-
 
 
 

@@ -9,11 +9,27 @@ const API = axios.create({
 
 
 
-export const createEmployee = (data)=>{
+export const createEmployee=(data)=>{
 
-    return API.post(
-        "/employees",
-        data
-    );
+
+return API.post(
+
+"/employees",
+
+data,
+
+{
+
+headers:{
+
+"Content-Type":
+"multipart/form-data"
+
+}
+
+}
+
+);
+
 
 };

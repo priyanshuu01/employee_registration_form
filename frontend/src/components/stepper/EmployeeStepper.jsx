@@ -1,4 +1,4 @@
-// import { createEmployee } from "../../api/employeeApi";
+
 // import { useState } from "react";
 
 // import PersonalDetails from "../forms/PersonalDetails";
@@ -8,38 +8,34 @@
 // import Review from "../forms/Review";
 // import Success from "../forms/Success";
 
-
 // import {
 //   Stepper,
 //   Step,
 //   StepLabel
 // } from "@mui/material";
 
-
 // import StepNavigation from "./StepNavigation";
-
 
 // import {
 //   useForm,
 //   FormProvider
 // } from "react-hook-form";
 
-
 // import {
 //   yupResolver
 // } from "@hookform/resolvers/yup";
 
-
 // import { useDispatch } from "react-redux";
-
 
 // import {
 //   saveFormData
 // } from "../../redux/employeeSlice";
 
+// import {
+//   createEmployee
+// } from "../../api/employeeApi";
 
 // import * as yup from "yup";
-
 
 
 
@@ -59,627 +55,572 @@
 // const schema = yup.object({
 
 
-//   // Personal Details
-
-//   firstName:yup.string()
-//     .required("First name is required")
-//     .matches(
-//       /^[A-Za-z\s]+$/,
-//       "Only alphabets are allowed"
-//     ),
+// firstName:yup.string()
+// .required("First name is required")
+// .matches(
+//  /^[A-Za-z\s]+$/,
+//  "Only alphabets are allowed"
+// ),
 
 
-//   lastName:yup.string()
-//     .required("Last name is required")
-//     .matches(
-//       /^[A-Za-z\s]+$/,
-//       "Only alphabets are allowed"
-//     ),
+// lastName:yup.string()
+// .required("Last name is required")
+// .matches(
+//  /^[A-Za-z\s]+$/,
+//  "Only alphabets are allowed"
+// ),
 
 
-//   email:yup.string()
-//     .email("Enter valid email")
-//     .required("Email is required"),
-
-
-//   phone:yup.string()
-//     .matches(
-//       /^[0-9]{10}$/,
-//       "Phone must be 10 digits"
-//     )
-//     .required("Phone is required"),
-
-
-//   gender:yup.string()
-//     .required("Gender is required"),
-
-
-//   bloodGroup:yup.string()
-//     .required("Blood group is required"),
+// email:yup.string()
+// .email("Enter valid email")
+// .required("Email is required"),
 
 
 
+// phone:yup.string()
+// .matches(
+//  /^[0-9]{10}$/,
+//  "Phone must be 10 digits"
+// )
+// .required("Phone is required"),
 
 
-//   // Address Details
 
-//   address:yup.string()
-//     .required("Address is required"),
-
-
-//   city:yup.string()
-//     .required("City is required"),
+// gender:yup.string()
+// .required("Gender is required"),
 
 
-//   state:yup.string()
-//     .required("State is required"),
 
-
-//   country:yup.string()
-//     .required("Country is required"),
-
-
-//   pincode:yup.string()
-//     .matches(
-//       /^[0-9]{6}$/,
-//       "Pincode must be 6 digits"
-//     )
-//     .required("Pincode is required"),
+// bloodGroup:yup.string()
+// .required("Blood group is required"),
 
 
 
 
 
-//   // Job Details
-
-//   employeeId:yup.string()
-//     .required("Employee ID is required"),
+// address:yup.string()
+// .required("Address is required"),
 
 
-//   department:yup.string()
-//     .required("Department is required"),
+// city:yup.string()
+// .required("City is required"),
 
 
-//   jobType:yup.string()
-//     .required("Job type is required"),
+// state:yup.string()
+// .required("State is required"),
 
 
-//   salary:yup.string()
-//     .required("Salary is required"),
+// country:yup.string()
+// .required("Country is required"),
+
+
+// pincode:yup.string()
+// .matches(
+//  /^[0-9]{6}$/,
+//  "Pincode must be 6 digits"
+// )
+// .required("Pincode is required"),
 
 
 
 
 
-//   // Documents
-
-//   profilePhoto:yup.mixed()
-//     .required("Profile photo is required"),
+// employeeId:yup.string()
+// .required("Employee ID is required"),
 
 
-//   resume:yup.mixed()
-//     .required("Resume is required")
+// department:yup.string()
+// .required("Department is required"),
+
+
+// jobType:yup.string()
+// .required("Job type is required"),
+
+
+// salary:yup.string()
+// .required("Salary is required"),
+
+
+
+
+
+// profilePhoto:yup.mixed()
+// .required("Profile photo is required"),
+
+
+
+// resume:yup.mixed()
+// .required("Resume is required")
 
 
 // });
 
 
 
-
-
-
-
-
-
 // function EmployeeStepper(){
 
 
-//   const [activeStep,setActiveStep] = useState(0);
+// const [activeStep,setActiveStep]=useState(0);
 
+// const [submittedData,setSubmittedData]=useState(null);
 
-//   const [submittedData,setSubmittedData] = useState(null);
+// const dispatch=useDispatch();
 
 
 
-//   const dispatch = useDispatch();
+// const methods=useForm({
 
+// resolver:yupResolver(schema),
 
+// mode:"all",
 
+// shouldUnregister:false,
 
+// defaultValues:{
+// firstName:"",
+// lastName:"",
+// email:"",
+// phone:"",
+// gender:"",
+// bloodGroup:"",
 
 
-//   const methods = useForm({
+// address:"",
+// city:"",
+// state:"",
+// country:"",
+// pincode:"",
 
-//     resolver:yupResolver(schema),
 
-//     mode:"all",
+// employeeId:"",
+// department:"",
+// jobType:"",
+// salary:"",
 
 
-//     // Important: keeps values when moving back
-//     shouldUnregister:false,
+// profilePhoto:null,
+// resume:null,
+// publicId:""
+// }
+// });
 
 
-//     defaultValues:{
+// const {
+// trigger,
+// handleSubmit
+// }=methods;
+// const generatePublicId=()=>{
+// return (
 
+// "EMP-" +
 
-//       firstName:"",
-//       lastName:"",
-//       email:"",
-//       phone:"",
-//       gender:"",
-//       bloodGroup:"",
+// Math.floor(
+// 100000 + Math.random()*900000
+// )
+// );
+// };
 
 
 
-//       address:"",
-//       city:"",
-//       state:"",
-//       country:"",
-//       pincode:"",
 
+// const handleNext=async()=>{
+// let fields=[];
 
+// if(activeStep===0){
 
-//       employeeId:"",
-//       department:"",
-//       jobType:"",
-//       salary:"",
+// fields=[
+// "firstName",
+// "lastName",
+// "email",
+// "phone",
+// "gender",
+// "bloodGroup"
+// ];
 
+// }
 
 
-//       profilePhoto:null,
 
-//       resume:null,
+// if(activeStep===1){
 
+// fields=[
+// "address",
+// "city",
+// "state",
+// "country",
+// "pincode"
+// ];
 
-//       publicId:""
+// }
 
 
-//     }
 
-//   });
+// if(activeStep===2){
 
+// fields=[
+// "employeeId",
+// "department",
+// "jobType",
+// "salary"
+// ];
 
+// }
 
 
 
+// if(activeStep===3){
 
-//   const {
-//     trigger,
-//     handleSubmit
-//   } = methods;
+// fields=[
+// "profilePhoto",
+// "resume"
+// ];
 
+// }
 
 
 
 
+// const valid=await trigger(fields);
 
 
-//   const generatePublicId = ()=>{
 
+// if(!valid){
 
-//     return (
+// return;
 
-//       "EMP-" +
+// }
 
-//       Math.floor(
-//         100000 + Math.random()*900000
-//       )
 
-//     );
 
 
-//   };
 
+// // FINAL SUBMIT
 
+// if(activeStep===steps.length-1){
 
 
+// handleSubmit(async(data)=>{
 
 
+// const finalData={
 
 
+// ...data,
 
-//   const goToStep=(step)=>{
 
-//     setActiveStep(step);
+// publicId:generatePublicId()
 
-//   };
 
+// };
 
 
 
 
+// console.log(
+// "Final Employee Data:",
+// finalData
+// );
 
+// // Remove file objects before sending
 
+// const formData = new FormData();
 
 
-//   const handleNext = async()=>{
 
+// Object.keys(finalData).forEach((key)=>{
 
-//     let fields=[];
 
+// if(
+// key==="profilePhoto"
+// ||
+// key==="resume"
+// ){
 
+// formData.append(
+// key,
+// finalData[key]
+// );
 
+// }
 
+// else{
 
-//     if(activeStep===0){
 
-//       fields=[
+// formData.append(
+// key,
+// finalData[key]
+// );
+// }
+// });
 
-//         "firstName",
-//         "lastName",
-//         "email",
-//         "phone",
-//         "gender",
-//         "bloodGroup"
 
-//       ];
 
-//     }
+// try{
+// const response = await createEmployee(formData);
 
-
-
-
-
-
-//     if(activeStep===1){
-
-//       fields=[
-
-//         "address",
-//         "city",
-//         "state",
-//         "country",
-//         "pincode"
-
-//       ];
-
-//     }
-
-
-
-
-
-
-//     if(activeStep===2){
-
-//       fields=[
-
-//         "employeeId",
-//         "department",
-//         "jobType",
-//         "salary"
-
-//       ];
-
-//     }
-
-
-
-
-
-
-//     if(activeStep===3){
-
-//       fields=[
-
-//         "profilePhoto",
-//         "resume"
-
-//       ];
-
-//     }
-
-
-
-
-
-
-
-//     const valid = await trigger(fields);
-
-
-
-//     if(!valid){
-
-//       return;
-
-//     }
-
-
-
-
-
-
-
-
-//     // Final submit
-
-//     if(activeStep === steps.length-1){
-
-
-
-//       handleSubmit((data)=>{
-
-
-
-//         const finalData={
-
-//           ...data,
-
-//           publicId:generatePublicId()
-
-//         };
-
-
-
-
-
-
-//         console.log(
-//           "Final Employee Data:",
-//           finalData
-//         );
-
-
-
-
-//         // Remove File objects before Redux
-
-//           const reduxData = {
-
-//               ...finalData,
-
-//               profilePhoto: finalData.profilePhoto,
-
-//               resume: finalData.resume?.name || ""
-
-//           };
-
-
-
-//        dispatch(
-//  saveFormData({
-//    ...reduxData,
-//    profilePhoto: finalData.profilePhoto.name
-//  })
+// console.log(
+// "Backend Response:",
+// response.data
 // );
 
 
-// setSubmittedData(finalData);
 
 
 
 
+// dispatch(
+// saveFormData(cleanData)
+// );
 
 
 
-//         // Send clean data to success page
 
-//         setSubmittedData(reduxData);
 
+// setSubmittedData(cleanData);
 
 
 
-//       })();
+// }
 
+// catch(error){
 
 
+// console.log(
 
-//       return;
+// "Backend Error:",
 
-//     }
+// error.response?.data || error.message
 
+// );
 
 
 
+// alert(
+// "Employee registration failed"
+// );
 
 
+// }
 
 
-//     setActiveStep(
-//       prev=>prev+1
-//     );
 
 
+// })();
 
-//   };
 
 
+// return;
 
 
+// }
 
 
 
 
 
-//   const handleBack=()=>{
 
 
-//     if(activeStep>0){
+// setActiveStep(
+// prev=>prev+1
+// );
 
 
-//       setActiveStep(
-//         prev=>prev-1
-//       );
+// };
 
 
-//     }
 
 
-//   };
 
 
 
 
 
+// const handleBack=()=>{
 
 
+// if(activeStep>0){
 
+// setActiveStep(
+// prev=>prev-1
+// );
 
-//   // Show success page
+// }
 
-//   if(submittedData){
 
+// };
 
-//     return (
 
-//       <Success
 
-//         employeeData={submittedData}
 
-//       />
 
-//     );
 
 
-//   }
 
 
+// const goToStep=(step)=>{
 
+// setActiveStep(step);
 
+// };
 
 
 
 
 
-//   return(
 
 
-//     <FormProvider {...methods}>
 
 
-//       <Stepper
+// if(submittedData){
 
-//         activeStep={activeStep}
 
-//         alternativeLabel
+// return (
 
-//       >
+// <Success
 
+// employeeData={submittedData}
 
+// />
 
-//         {
+// );
 
-//           steps.map((label)=>(
 
+// }
 
-//             <Step key={label}>
 
 
-//               <StepLabel>
 
-//                 {label}
 
-//               </StepLabel>
 
 
-//             </Step>
 
 
-//           ))
+// return (
 
-//         }
+// <FormProvider {...methods}>
 
 
+// <Stepper
 
-//       </Stepper>
+// activeStep={activeStep}
 
+// alternativeLabel
 
+// >
 
 
+// {
 
+// steps.map((label)=>(
 
+// <Step key={label}>
 
+// <StepLabel>
 
+// {label}
 
-//       {
-//         activeStep===0 &&
+// </StepLabel>
 
-//         <PersonalDetails/>
+// </Step>
 
-//       }
+// ))
 
+// }
 
 
+// </Stepper>
 
 
 
-//       {
-//         activeStep===1 &&
 
-//         <AddressDetails/>
 
-//       }
 
 
 
+// {
 
+// activeStep===0 &&
 
+// <PersonalDetails/>
 
-//       {
-//         activeStep===2 &&
+// }
 
-//         <JobDetails/>
 
-//       }
 
 
+// {
 
+// activeStep===1 &&
 
+// <AddressDetails/>
 
+// }
 
-//       {
-//         activeStep===3 &&
 
-//         <Documents/>
 
-//       }
 
 
+// {
 
+// activeStep===2 &&
 
+// <JobDetails/>
 
+// }
 
-//       {
-//         activeStep===4 &&
 
-//         <Review
 
-//           goToStep={goToStep}
 
-//         />
 
-//       }
+// {
 
+// activeStep===3 &&
 
+// <Documents/>
 
+// }
 
 
 
 
 
+// {
 
-//       <StepNavigation
+// activeStep===4 &&
 
-//         activeStep={activeStep}
+// <Review
 
-//         stepsLength={steps.length}
+// goToStep={goToStep}
 
-//         handleNext={handleNext}
+// />
 
-//         handleBack={handleBack}
+// }
 
-//       />
 
 
 
 
 
 
-//     </FormProvider>
+// <StepNavigation
 
+// activeStep={activeStep}
 
-//   );
+// stepsLength={steps.length}
+
+// handleNext={handleNext}
+
+// handleBack={handleBack}
+
+// />
+
+
+
+
+
+// </FormProvider>
+
+// );
 
 
 // }
@@ -687,12 +628,6 @@
 
 
 // export default EmployeeStepper;
-
-
-
-
-
-
 
 
 import { useState } from "react";
@@ -875,6 +810,7 @@ const dispatch=useDispatch();
 
 
 
+
 const methods=useForm({
 
 resolver:yupResolver(schema),
@@ -895,11 +831,13 @@ gender:"",
 bloodGroup:"",
 
 
+
 address:"",
 city:"",
 state:"",
 country:"",
 pincode:"",
+
 
 
 employeeId:"",
@@ -908,17 +846,19 @@ jobType:"",
 salary:"",
 
 
+
 profilePhoto:null,
 
 resume:null,
 
-
 publicId:""
-
 
 }
 
+
 });
+
+
 
 
 
@@ -929,6 +869,7 @@ const {
 trigger,
 handleSubmit
 }=methods;
+
 
 
 
@@ -959,6 +900,7 @@ Math.floor(
 
 
 
+
 const handleNext=async()=>{
 
 
@@ -966,56 +908,74 @@ let fields=[];
 
 
 
+
 if(activeStep===0){
 
 fields=[
+
 "firstName",
 "lastName",
 "email",
 "phone",
 "gender",
 "bloodGroup"
+
 ];
 
 }
+
+
 
 
 
 if(activeStep===1){
 
 fields=[
+
 "address",
 "city",
 "state",
 "country",
 "pincode"
+
 ];
 
 }
+
+
 
 
 
 if(activeStep===2){
 
 fields=[
+
 "employeeId",
 "department",
 "jobType",
 "salary"
+
 ];
 
 }
+
+
 
 
 
 if(activeStep===3){
 
 fields=[
+
 "profilePhoto",
 "resume"
+
 ];
 
 }
+
+
+
 
 
 
@@ -1034,9 +994,12 @@ return;
 
 
 
+
+
 // FINAL SUBMIT
 
 if(activeStep===steps.length-1){
+
 
 
 handleSubmit(async(data)=>{
@@ -1056,6 +1019,7 @@ publicId:generatePublicId()
 
 
 
+
 console.log(
 "Final Employee Data:",
 finalData
@@ -1067,9 +1031,65 @@ finalData
 
 
 
-// Remove file objects before sending
 
-const cleanData={
+// Create FormData
+
+const formData=new FormData();
+
+
+
+
+
+Object.keys(finalData).forEach((key)=>{
+
+
+formData.append(
+
+key,
+
+finalData[key]
+
+);
+
+
+});
+
+
+
+
+
+
+
+
+
+try{
+
+
+const response=await createEmployee(
+formData
+);
+
+
+
+console.log(
+
+"Backend Response:",
+
+response.data
+
+);
+
+
+
+
+
+
+
+
+
+// Redux clean data
+
+const reduxData={
 
 
 ...finalData,
@@ -1083,7 +1103,6 @@ finalData.profilePhoto?.name || "",
 resume:
 finalData.resume?.name || ""
 
-
 };
 
 
@@ -1091,41 +1110,24 @@ finalData.resume?.name || ""
 
 
 
-
-try{
-
-
-const response=await createEmployee(
-cleanData
-);
-
-
-
-console.log(
-"Backend Response:",
-response.data
-);
-
-
-
-
-
-
 dispatch(
-saveFormData(cleanData)
+saveFormData(reduxData)
 );
 
 
 
 
 
-setSubmittedData(cleanData);
+setSubmittedData(reduxData);
+
+
 
 
 
 }
 
 catch(error){
+
 
 
 console.log(
@@ -1141,6 +1143,7 @@ error.response?.data || error.message
 alert(
 "Employee registration failed"
 );
+
 
 
 }
@@ -1163,8 +1166,11 @@ return;
 
 
 
+
 setActiveStep(
+
 prev=>prev+1
+
 );
 
 
@@ -1183,9 +1189,13 @@ const handleBack=()=>{
 
 if(activeStep>0){
 
+
 setActiveStep(
+
 prev=>prev-1
+
 );
+
 
 }
 
@@ -1199,10 +1209,11 @@ prev=>prev-1
 
 
 
-
 const goToStep=(step)=>{
 
+
 setActiveStep(step);
+
 
 };
 
@@ -1256,7 +1267,9 @@ alternativeLabel
 
 steps.map((label)=>(
 
+
 <Step key={label}>
+
 
 <StepLabel>
 
@@ -1264,7 +1277,9 @@ steps.map((label)=>(
 
 </StepLabel>
 
+
 </Step>
+
 
 ))
 
@@ -1291,6 +1306,9 @@ activeStep===0 &&
 
 
 
+
+
+
 {
 
 activeStep===1 &&
@@ -1298,6 +1316,9 @@ activeStep===1 &&
 <AddressDetails/>
 
 }
+
+
+
 
 
 
@@ -1315,6 +1336,9 @@ activeStep===2 &&
 
 
 
+
+
+
 {
 
 activeStep===3 &&
@@ -1322,6 +1346,9 @@ activeStep===3 &&
 <Documents/>
 
 }
+
+
+
 
 
 
@@ -1345,17 +1372,27 @@ goToStep={goToStep}
 
 
 
+
+
 <StepNavigation
+
 
 activeStep={activeStep}
 
+
 stepsLength={steps.length}
+
 
 handleNext={handleNext}
 
+
 handleBack={handleBack}
 
+
 />
+
+
+
 
 
 

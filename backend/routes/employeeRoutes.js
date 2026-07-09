@@ -16,11 +16,31 @@ const {
 
 
 // CREATE EMPLOYEE
-router.post(
-    "/",
-    createEmployee
-);
+const upload = require("../middleware/upload");
 
+
+
+router.post(
+
+"/",
+
+upload.fields([
+
+{
+ name:"profilePhoto",
+ maxCount:1
+},
+
+{
+ name:"resume",
+ maxCount:1
+}
+
+]),
+
+createEmployee
+
+);
 
 
 // GET ALL EMPLOYEES
