@@ -58,6 +58,8 @@ const steps = [
 const schema = yup.object({
 
 
+  // Personal Details
+
   firstName:yup.string()
     .required("First name is required")
     .matches(
@@ -74,11 +76,9 @@ const schema = yup.object({
     ),
 
 
-
   email:yup.string()
     .email("Enter valid email")
     .required("Email is required"),
-
 
 
   phone:yup.string()
@@ -89,10 +89,8 @@ const schema = yup.object({
     .required("Phone is required"),
 
 
-
   gender:yup.string()
     .required("Gender is required"),
-
 
 
   bloodGroup:yup.string()
@@ -102,24 +100,22 @@ const schema = yup.object({
 
 
 
+  // Address Details
+
   address:yup.string()
     .required("Address is required"),
-
 
 
   city:yup.string()
     .required("City is required"),
 
 
-
   state:yup.string()
     .required("State is required"),
 
 
-
   country:yup.string()
     .required("Country is required"),
-
 
 
   pincode:yup.string()
@@ -133,19 +129,18 @@ const schema = yup.object({
 
 
 
+  // Job Details
+
   employeeId:yup.string()
     .required("Employee ID is required"),
-
 
 
   department:yup.string()
     .required("Department is required"),
 
 
-
   jobType:yup.string()
     .required("Job type is required"),
-
 
 
   salary:yup.string()
@@ -155,15 +150,14 @@ const schema = yup.object({
 
 
 
+  // Documents
 
   profilePhoto:yup.mixed()
     .required("Profile photo is required"),
 
 
-
   resume:yup.mixed()
     .required("Resume is required")
-
 
 
 });
@@ -179,9 +173,7 @@ const schema = yup.object({
 function EmployeeStepper(){
 
 
-
   const [activeStep,setActiveStep] = useState(0);
-
 
 
   const [submittedData,setSubmittedData] = useState(null);
@@ -195,18 +187,15 @@ function EmployeeStepper(){
 
 
 
-
   const methods = useForm({
 
-
     resolver:yupResolver(schema),
-
 
     mode:"all",
 
 
+    // Important: keeps values when moving back
     shouldUnregister:false,
-
 
 
     defaultValues:{
@@ -238,21 +227,15 @@ function EmployeeStepper(){
 
       profilePhoto:null,
 
-
       resume:null,
 
 
       publicId:""
 
 
-
     }
 
-
   });
-
-
-
 
 
 
@@ -270,9 +253,7 @@ function EmployeeStepper(){
 
 
 
-
-
-  const generatePublicId=()=>{
+  const generatePublicId = ()=>{
 
 
     return (
@@ -392,8 +373,8 @@ function EmployeeStepper(){
 
 
 
-    const valid = await trigger(fields);
 
+    const valid = await trigger(fields);
 
 
 
@@ -408,6 +389,9 @@ function EmployeeStepper(){
 
 
 
+
+
+    // Final submit
 
     if(activeStep === steps.length-1){
 
@@ -428,6 +412,8 @@ function EmployeeStepper(){
 
 
 
+
+
         console.log(
           "Final Employee Data:",
           finalData
@@ -436,18 +422,53 @@ function EmployeeStepper(){
 
 
 
+
+
+
+
+        // Remove File objects before Redux
+
+        const reduxData={
+
+          ...finalData,
+
+
+          profilePhoto:
+          finalData.profilePhoto?.name || "",
+
+
+          resume:
+          finalData.resume?.name || ""
+
+        };
+
+
+
+
+
+
+
+
         dispatch(
-          saveFormData(finalData)
+          saveFormData(reduxData)
         );
 
 
 
 
-        setSubmittedData(finalData);
+
+
+
+
+        // Send clean data to success page
+
+        setSubmittedData(reduxData);
+
 
 
 
       })();
+
 
 
 
@@ -502,6 +523,8 @@ function EmployeeStepper(){
 
 
 
+  // Show success page
+
   if(submittedData){
 
 
@@ -541,7 +564,9 @@ function EmployeeStepper(){
       >
 
 
+
         {
+
           steps.map((label)=>(
 
 
@@ -559,7 +584,9 @@ function EmployeeStepper(){
 
 
           ))
+
         }
+
 
 
       </Stepper>
@@ -571,10 +598,14 @@ function EmployeeStepper(){
 
 
 
+
       {
         activeStep===0 &&
+
         <PersonalDetails/>
+
       }
+
 
 
 
@@ -582,8 +613,11 @@ function EmployeeStepper(){
 
       {
         activeStep===1 &&
+
         <AddressDetails/>
+
       }
+
 
 
 
@@ -591,8 +625,11 @@ function EmployeeStepper(){
 
       {
         activeStep===2 &&
+
         <JobDetails/>
+
       }
+
 
 
 
@@ -600,8 +637,11 @@ function EmployeeStepper(){
 
       {
         activeStep===3 &&
+
         <Documents/>
+
       }
+
 
 
 
@@ -609,10 +649,15 @@ function EmployeeStepper(){
 
       {
         activeStep===4 &&
-        <Review 
+
+        <Review
+
           goToStep={goToStep}
+
         />
+
       }
+
 
 
 
@@ -632,6 +677,9 @@ function EmployeeStepper(){
         handleBack={handleBack}
 
       />
+
+
+
 
 
 

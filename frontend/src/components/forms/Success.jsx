@@ -5,41 +5,107 @@ import {
   Grid
 } from "@mui/material";
 
-import {
-  useLocation,
-  useNavigate
-} from "react-router-dom";
 
-
-function Success() {
-
-
-  const location = useLocation();
-
-  const navigate = useNavigate();
-
-
-  const employee = location.state;
-
-
-
-  if(!employee){
-
-    return (
-
-      <Typography variant="h5">
-        No Employee Data Found
-      </Typography>
-
-    );
-
-  }
-
+function Success({employeeData}) {
 
 
   const downloadPDF = ()=>{
 
-    alert("PDF generation will be added next");
+
+    const content = `
+
+Employee Registration Details
+
+Public ID:
+${employeeData.publicId}
+
+
+Name:
+${employeeData.firstName} ${employeeData.lastName}
+
+
+Email:
+${employeeData.email}
+
+
+Phone:
+${employeeData.phone}
+
+
+Gender:
+${employeeData.gender}
+
+
+Blood Group:
+${employeeData.bloodGroup}
+
+
+Address:
+${employeeData.address}
+
+
+City:
+${employeeData.city}
+
+
+State:
+${employeeData.state}
+
+
+Country:
+${employeeData.country}
+
+
+Employee ID:
+${employeeData.employeeId}
+
+
+Department:
+${employeeData.department}
+
+
+Job Type:
+${employeeData.jobType}
+
+
+Salary:
+${employeeData.salary}
+
+
+Profile Photo:
+${employeeData.profilePhoto}
+
+
+Resume:
+${employeeData.resume}
+
+`;
+
+
+
+    const blob = new Blob(
+      [content],
+      {
+        type:"text/plain"
+      }
+    );
+
+
+    const url = URL.createObjectURL(blob);
+
+
+
+    const link=document.createElement("a");
+
+
+    link.href=url;
+
+    link.download=
+    `${employeeData.publicId}.txt`;
+
+
+    link.click();
+
 
   };
 
@@ -47,233 +113,139 @@ function Success() {
 
 
 
-  return (
+return (
 
-    <Grid
-      container
-      justifyContent="center"
-      sx={{
-        mt:5
-      }}
-    >
+<Grid container spacing={3}>
 
 
-      <Grid item xs={12} md={6}>
+<Grid item xs={12}>
 
 
-        <Paper
-          elevation={4}
-          sx={{
-            p:4,
-            textAlign:"center"
-          }}
-        >
+<Paper
 
+elevation={4}
 
-          <Typography
-            variant="h4"
-            color="success.main"
-          >
-            Employee Registered Successfully 🎉
-          </Typography>
+sx={{
 
+padding:4,
 
+textAlign:"center"
 
-          <Typography
-            sx={{
-              mt:3
-            }}
-          >
+}}
 
-            <strong>Name:</strong>{" "}
-            {employee.firstName} {employee.lastName}
+>
 
-          </Typography>
 
 
+<Typography variant="h4">
 
+🎉 Employee Registered Successfully
 
-          <Typography>
+</Typography>
 
-            <strong>Public ID:</strong>{" "}
 
-            {employee.publicId}
 
-          </Typography>
 
+<Typography
 
+variant="h6"
 
+sx={{
+mt:3
+}}
 
+>
 
+Employee Name:
 
-          {
-            employee.profilePhoto &&
+{employeeData.firstName}
 
-            <img
+{" "}
 
-              src={
-                URL.createObjectURL(
-                  employee.profilePhoto
-                )
-              }
+{employeeData.lastName}
 
-              alt="Profile"
 
-              width="150"
+</Typography>
 
-              height="150"
 
-              style={{
-                marginTop:"20px",
-                borderRadius:"50%",
-                objectFit:"cover"
-              }}
 
-            />
 
-          }
 
+<Typography
 
+variant="h6"
 
+sx={{
+mt:2
+}}
 
+>
 
+Public ID:
 
+{employeeData.publicId}
 
-          <Typography
-            sx={{
-              mt:3
-            }}
-          >
 
-            <strong>Email:</strong>{" "}
+</Typography>
 
-            {employee.email}
 
-          </Typography>
 
 
 
 
 
-          <Typography>
+<Typography
 
-            <strong>Department:</strong>{" "}
+sx={{
+mt:2
+}}
 
-            {employee.department}
+>
 
-          </Typography>
+Your documents have been saved successfully.
 
 
+</Typography>
 
 
 
-          <Typography>
 
-            <strong>Employee ID:</strong>{" "}
 
-            {employee.employeeId}
 
-          </Typography>
+<Button
 
+variant="contained"
 
+sx={{
 
+mt:3
 
+}}
 
+onClick={downloadPDF}
 
+>
 
-          {
-            employee.resume &&
+Download Registration PDF
 
-            <Button
 
-              variant="outlined"
+</Button>
 
-              sx={{
-                mt:3
-              }}
 
-              component="a"
 
-              href={
-                URL.createObjectURL(
-                  employee.resume
-                )
-              }
 
-              download={
-                employee.resume.name
-              }
 
-            >
+</Paper>
 
-              Download Resume
 
-            </Button>
+</Grid>
 
-          }
 
+</Grid>
 
 
+);
 
-
-
-
-          <br />
-
-
-
-          <Button
-
-            variant="contained"
-
-            sx={{
-              mt:2
-            }}
-
-            onClick={downloadPDF}
-
-          >
-
-            Download Registration PDF
-
-          </Button>
-
-
-
-
-
-
-          <br />
-
-
-
-          <Button
-
-            sx={{
-              mt:2
-            }}
-
-            onClick={()=>navigate("/")}
-
-          >
-
-            Go Home
-
-          </Button>
-
-
-
-
-
-        </Paper>
-
-
-      </Grid>
-
-
-    </Grid>
-
-  );
 
 }
 
