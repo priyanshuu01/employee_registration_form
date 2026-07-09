@@ -9,12 +9,13 @@ import {
 } from "react-hook-form";
 
 
-
-function JobDetails() {
+function JobDetails(){
 
 
   const {
     register,
+    setValue,
+    watch,
     formState:{
       errors
     }
@@ -23,18 +24,29 @@ function JobDetails() {
 
 
 
-  return (
+  const department = watch("department");
+
+  const jobType = watch("jobType");
 
 
-    <Grid
-      container
-      spacing={3}
+
+
+
+
+  return(
+
+
+    <Grid 
+      container 
+      spacing={3} 
       sx={{mt:3}}
     >
 
 
 
-      <Grid xs={12} md={6}>
+      {/* Employee ID */}
+
+      <Grid item xs={12} md={6}>
 
 
         <TextField
@@ -45,7 +57,9 @@ function JobDetails() {
 
           {...register("employeeId")}
 
-          error={!!errors.employeeId}
+          error={
+            !!errors.employeeId
+          }
 
           helperText={
             errors.employeeId?.message
@@ -60,24 +74,82 @@ function JobDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+
+      {/* Department */}
+
+
+      <Grid item xs={12} md={6}>
 
 
         <TextField
+
+          select
 
           fullWidth
 
           label="Department"
 
-          {...register("department")}
 
-          error={!!errors.department}
+          value={department || ""}
+
+
+
+          onChange={(e)=>{
+
+
+            setValue(
+              "department",
+              e.target.value,
+              {
+                shouldValidate:true,
+                shouldDirty:true
+              }
+            );
+
+
+          }}
+
+
+
+          error={
+            !!errors.department
+          }
+
+
 
           helperText={
             errors.department?.message
           }
 
-        />
+
+        >
+
+
+
+          <MenuItem value="IT">
+            IT
+          </MenuItem>
+
+
+          <MenuItem value="HR">
+            HR
+          </MenuItem>
+
+
+          <MenuItem value="Finance">
+            Finance
+          </MenuItem>
+
+
+          <MenuItem value="Marketing">
+            Marketing
+          </MenuItem>
+
+
+
+        </TextField>
 
 
       </Grid>
@@ -88,7 +160,12 @@ function JobDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+      {/* Job Type */}
+
+
+      <Grid item xs={12} md={6}>
 
 
         <TextField
@@ -99,17 +176,42 @@ function JobDetails() {
 
           label="Job Type"
 
-          defaultValue=""
 
-          {...register("jobType")}
+          value={jobType || ""}
 
-          error={!!errors.jobType}
+
+
+          onChange={(e)=>{
+
+
+            setValue(
+              "jobType",
+              e.target.value,
+              {
+                shouldValidate:true,
+                shouldDirty:true
+              }
+            );
+
+
+          }}
+
+
+
+          error={
+            !!errors.jobType
+          }
+
+
 
           helperText={
             errors.jobType?.message
           }
 
+
+
         >
+
 
 
           <MenuItem value="Full Time">
@@ -127,6 +229,12 @@ function JobDetails() {
           </MenuItem>
 
 
+          <MenuItem value="Contract">
+            Contract
+          </MenuItem>
+
+
+
         </TextField>
 
 
@@ -137,22 +245,40 @@ function JobDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+
+      {/* Salary */}
+
+
+      <Grid item xs={12} md={6}>
 
 
         <TextField
 
+
           fullWidth
+
 
           label="Salary"
 
+
+
           {...register("salary")}
 
-          error={!!errors.salary}
+
+
+          error={
+            !!errors.salary
+          }
+
+
 
           helperText={
             errors.salary?.message
           }
+
+
 
         />
 
@@ -161,11 +287,13 @@ function JobDetails() {
 
 
 
+
+
+
     </Grid>
 
 
   );
-
 
 }
 

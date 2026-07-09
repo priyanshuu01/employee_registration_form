@@ -9,7 +9,9 @@ import {
   MenuItem
 } from "@mui/material";
 
-import { useFormContext } from "react-hook-form";
+import {
+  useFormContext
+} from "react-hook-form";
 
 
 function PersonalDetails() {
@@ -18,17 +20,62 @@ function PersonalDetails() {
   const {
     register,
     setValue,
-    formState: {
+    watch,
+    formState:{
       errors
     }
   } = useFormContext();
 
 
 
+  const gender = watch("gender");
+  const bloodGroup = watch("bloodGroup");
+
+
+
+
+  // Only alphabets allowed
+  const handleNameInput = (e)=>{
+
+    e.target.value = e.target.value.replace(
+      /[^A-Za-z\s]/g,
+      ""
+    );
+
+  };
+
+
+
+  // Only numbers allowed
+  const handlePhoneInput = (e)=>{
+
+    e.target.value = e.target.value.replace(
+      /[^0-9]/g,
+      ""
+    );
+
+    if(e.target.value.length > 10){
+
+      e.target.value =
+      e.target.value.slice(0,10);
+
+    }
+
+  };
+
+
+
+
   return (
 
-    <Grid container spacing={3} sx={{ mt: 3 }}>
+    <Grid 
+      container 
+      spacing={3} 
+      sx={{mt:3}}
+    >
 
+
+      {/* First Name */}
 
       <Grid item xs={12} md={6}>
 
@@ -40,9 +87,13 @@ function PersonalDetails() {
 
           {...register("firstName")}
 
+          onInput={handleNameInput}
+
           error={!!errors.firstName}
 
-          helperText={errors.firstName?.message}
+          helperText={
+            errors.firstName?.message
+          }
 
         />
 
@@ -50,6 +101,9 @@ function PersonalDetails() {
 
 
 
+
+
+      {/* Last Name */}
 
       <Grid item xs={12} md={6}>
 
@@ -61,9 +115,13 @@ function PersonalDetails() {
 
           {...register("lastName")}
 
+          onInput={handleNameInput}
+
           error={!!errors.lastName}
 
-          helperText={errors.lastName?.message}
+          helperText={
+            errors.lastName?.message
+          }
 
         />
 
@@ -72,6 +130,9 @@ function PersonalDetails() {
 
 
 
+
+
+      {/* Email */}
 
       <Grid item xs={12} md={6}>
 
@@ -85,7 +146,9 @@ function PersonalDetails() {
 
           error={!!errors.email}
 
-          helperText={errors.email?.message}
+          helperText={
+            errors.email?.message
+          }
 
         />
 
@@ -94,6 +157,9 @@ function PersonalDetails() {
 
 
 
+
+
+      {/* Phone */}
 
       <Grid item xs={12} md={6}>
 
@@ -105,9 +171,17 @@ function PersonalDetails() {
 
           {...register("phone")}
 
+          onInput={handlePhoneInput}
+
+          inputProps={{
+            maxLength:10
+          }}
+
           error={!!errors.phone}
 
-          helperText={errors.phone?.message}
+          helperText={
+            errors.phone?.message
+          }
 
         />
 
@@ -117,10 +191,15 @@ function PersonalDetails() {
 
 
 
+
+      {/* Gender */}
+
       <Grid item xs={12}>
 
 
-        <FormControl error={!!errors.gender}>
+        <FormControl 
+          error={!!errors.gender}
+        >
 
 
           <FormLabel>
@@ -128,21 +207,25 @@ function PersonalDetails() {
           </FormLabel>
 
 
+
           <RadioGroup
 
             row
 
-            onChange={(e)=>
+            value={gender || ""}
+
+            onChange={(e)=>{
 
               setValue(
                 "gender",
                 e.target.value,
                 {
-                  shouldValidate:true
+                  shouldValidate:true,
+                  shouldDirty:true
                 }
-              )
+              );
 
-            }
+            }}
 
           >
 
@@ -151,7 +234,9 @@ function PersonalDetails() {
 
               value="Male"
 
-              control={<Radio />}
+              control={
+                <Radio/>
+              }
 
               label="Male"
 
@@ -163,7 +248,9 @@ function PersonalDetails() {
 
               value="Female"
 
-              control={<Radio />}
+              control={
+                <Radio/>
+              }
 
               label="Female"
 
@@ -174,14 +261,23 @@ function PersonalDetails() {
 
 
 
+
+
           {
             errors.gender &&
 
-            <p style={{color:"red"}}>
-              {errors.gender.message}
+            <p style={{
+              color:"red"
+            }}>
+
+              {
+                errors.gender.message
+              }
+
             </p>
 
           }
+
 
 
         </FormControl>
@@ -194,6 +290,10 @@ function PersonalDetails() {
 
 
 
+
+
+      {/* Blood Group */}
+
       <Grid item xs={12} md={6}>
 
 
@@ -205,13 +305,32 @@ function PersonalDetails() {
 
           label="Blood Group"
 
-          defaultValue=""
 
-          {...register("bloodGroup")}
+          value={bloodGroup || ""}
+
+
+          onChange={(e)=>{
+
+            setValue(
+              "bloodGroup",
+              e.target.value,
+              {
+                shouldValidate:true,
+                shouldDirty:true
+              }
+            );
+
+          }}
+
+
 
           error={!!errors.bloodGroup}
 
-          helperText={errors.bloodGroup?.message}
+
+          helperText={
+            errors.bloodGroup?.message
+          }
+
 
         >
 
@@ -236,10 +355,33 @@ function PersonalDetails() {
           </MenuItem>
 
 
+
+          <MenuItem value="A-">
+            A-
+          </MenuItem>
+
+
+          <MenuItem value="B-">
+            B-
+          </MenuItem>
+
+
+
+          <MenuItem value="O-">
+            O-
+          </MenuItem>
+
+
+          <MenuItem value="AB-">
+            AB-
+          </MenuItem>
+
+
         </TextField>
 
 
       </Grid>
+
 
 
     </Grid>
@@ -250,178 +392,3 @@ function PersonalDetails() {
 
 
 export default PersonalDetails;
-
-
-
-
-
-
-// import {
-//   TextField,
-//   Grid,
-//   FormControl,
-//   FormLabel,
-//   RadioGroup,
-//   FormControlLabel,
-//   Radio,
-//   MenuItem,
-//   Button
-// } from "@mui/material";
-
-// import { useDispatch } from "react-redux";
-// import { saveFormData } from "../../redux/employeeSlice";
-
-// import { useForm } from "react-hook-form";
-// import { yupResolver } from "@hookform/resolvers/yup";
-// import * as yup from "yup";
-
-// const schema = yup.object({
-//   firstName: yup.string().required("First name is required"),
-
-//   lastName: yup.string().required("Last name is required"),
-
-//   email: yup
-//     .string()
-//     .email("Enter valid email")
-//     .required("Email is required"),
-
-//   phone: yup
-//     .string()
-//     .matches(/^[0-9]{10}$/, "Phone must be 10 digits")
-//     .required("Phone is required"),
-
-//   gender: yup.string().required("Gender is required"),
-
-//   bloodGroup: yup.string().required("Blood group is required")
-// });
-
-// function PersonalDetails() {
-//   const dispatch = useDispatch();
-
-//   const {
-//     register,
-//     handleSubmit,
-//     setValue,
-//     formState: { errors }
-//   } = useForm({
-//     resolver: yupResolver(schema),
-//     defaultValues: {
-//       firstName: "",
-//       lastName: "",
-//       email: "",
-//       phone: "",
-//       gender: "",
-//       bloodGroup: ""
-//     }
-//   });
-
-//   const onSubmit = (data) => {
-//     console.log(data);
-
-//     dispatch(saveFormData(data));
-
-//     alert("Personal Details Saved Successfully!");
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit(onSubmit)}>
-//       <Grid container spacing={3}>
-//         <Grid item xs={12} md={6}>
-//           <TextField
-//             fullWidth
-//             label="First Name"
-//             {...register("firstName")}
-//             error={!!errors.firstName}
-//             helperText={errors.firstName?.message}
-//           />
-//         </Grid>
-
-//         <Grid item xs={12} md={6}>
-//           <TextField
-//             fullWidth
-//             label="Last Name"
-//             {...register("lastName")}
-//             error={!!errors.lastName}
-//             helperText={errors.lastName?.message}
-//           />
-//         </Grid>
-
-//         <Grid item xs={12} md={6}>
-//           <TextField
-//             fullWidth
-//             label="Email"
-//             {...register("email")}
-//             error={!!errors.email}
-//             helperText={errors.email?.message}
-//           />
-//         </Grid>
-
-//         <Grid item xs={12} md={6}>
-//           <TextField
-//             fullWidth
-//             label="Phone"
-//             {...register("phone")}
-//             error={!!errors.phone}
-//             helperText={errors.phone?.message}
-//           />
-//         </Grid>
-
-//         <Grid item xs={12}>
-//           <FormControl error={!!errors.gender}>
-//             <FormLabel>Gender</FormLabel>
-
-//             <RadioGroup
-//               row
-//               onChange={(e) =>
-//                 setValue("gender", e.target.value, {
-//                   shouldValidate: true
-//                 })
-//               }
-//             >
-//               <FormControlLabel
-//                 value="Male"
-//                 control={<Radio />}
-//                 label="Male"
-//               />
-
-//               <FormControlLabel
-//                 value="Female"
-//                 control={<Radio />}
-//                 label="Female"
-//               />
-//             </RadioGroup>
-
-//             <p style={{ color: "red" }}>
-//               {errors.gender?.message}
-//             </p>
-//           </FormControl>
-//         </Grid>
-
-//         <Grid item xs={12} md={6}>
-//           <TextField
-//             select
-//             fullWidth
-//             label="Blood Group"
-//             defaultValue=""
-//             {...register("bloodGroup")}
-//             error={!!errors.bloodGroup}
-//             helperText={errors.bloodGroup?.message}
-//           >
-//             <MenuItem value="A+">A+</MenuItem>
-//             <MenuItem value="B+">B+</MenuItem>
-//             <MenuItem value="O+">O+</MenuItem>
-//             <MenuItem value="AB+">AB+</MenuItem>
-//           </TextField>
-//         </Grid>
-
-//         <Grid item xs={12}>
-//           <Button type="submit" variant="contained">
-//             Save Personal Details
-//           </Button>
-//         </Grid>
-//       </Grid>
-//     </form>
-//   );
-// }
-
-// export default PersonalDetails;

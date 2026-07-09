@@ -4,27 +4,48 @@ import {
   MenuItem
 } from "@mui/material";
 
-import { useFormContext } from "react-hook-form";
+import {
+  useFormContext
+} from "react-hook-form";
 
 
-function AddressDetails() {
+function AddressDetails(){
 
 
   const {
     register,
-    formState: {
+    setValue,
+    watch,
+    formState:{
       errors
     }
   } = useFormContext();
 
 
 
+
+  const state = watch("state");
+  const country = watch("country");
+
+
+
+
   return (
 
-    <Grid container spacing={3} sx={{ mt: 3 }}>
+
+    <Grid 
+      container 
+      spacing={3} 
+      sx={{mt:3}}
+    >
 
 
-      <Grid xs={12}>
+
+
+      {/* Address */}
+
+      <Grid item xs={12}>
+
 
         <TextField
 
@@ -32,13 +53,25 @@ function AddressDetails() {
 
           label="Address"
 
+          multiline
+
+          rows={3}
+
           {...register("address")}
 
-          error={!!errors.address}
 
-          helperText={errors.address?.message}
+          error={
+            !!errors.address
+          }
+
+
+          helperText={
+            errors.address?.message
+          }
+
 
         />
+
 
       </Grid>
 
@@ -46,7 +79,12 @@ function AddressDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+      {/* City */}
+
+      <Grid item xs={12} md={6}>
+
 
         <TextField
 
@@ -56,11 +94,19 @@ function AddressDetails() {
 
           {...register("city")}
 
-          error={!!errors.city}
 
-          helperText={errors.city?.message}
+          error={
+            !!errors.city
+          }
+
+
+          helperText={
+            errors.city?.message
+          }
+
 
         />
+
 
       </Grid>
 
@@ -68,7 +114,14 @@ function AddressDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+
+
+      {/* State */}
+
+      <Grid item xs={12} md={6}>
+
 
         <TextField
 
@@ -78,19 +131,41 @@ function AddressDetails() {
 
           label="State"
 
-          defaultValue=""
 
-          {...register("state")}
+          value={state || ""}
 
-          error={!!errors.state}
 
-          helperText={errors.state?.message}
+
+          onChange={(e)=>{
+
+
+            setValue(
+              "state",
+              e.target.value,
+              {
+                shouldValidate:true,
+                shouldDirty:true
+              }
+            );
+
+
+          }}
+
+
+
+          error={
+            !!errors.state
+          }
+
+
+
+          helperText={
+            errors.state?.message
+          }
+
 
         >
 
-          <MenuItem value="Delhi">
-            Delhi
-          </MenuItem>
 
 
           <MenuItem value="Uttar Pradesh">
@@ -98,12 +173,29 @@ function AddressDetails() {
           </MenuItem>
 
 
-          <MenuItem value="Haryana">
-            Haryana
+          <MenuItem value="Delhi">
+            Delhi
           </MenuItem>
 
 
+          <MenuItem value="Maharashtra">
+            Maharashtra
+          </MenuItem>
+
+
+          <MenuItem value="Rajasthan">
+            Rajasthan
+          </MenuItem>
+
+
+          <MenuItem value="Gujarat">
+            Gujarat
+          </MenuItem>
+
+
+
         </TextField>
+
 
       </Grid>
 
@@ -112,7 +204,14 @@ function AddressDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+
+      {/* Country */}
+
+
+      <Grid item xs={12} md={6}>
+
 
         <TextField
 
@@ -122,15 +221,42 @@ function AddressDetails() {
 
           label="Country"
 
-          defaultValue=""
 
-          {...register("country")}
+          value={country || ""}
 
-          error={!!errors.country}
 
-          helperText={errors.country?.message}
+
+          onChange={(e)=>{
+
+
+            setValue(
+              "country",
+              e.target.value,
+              {
+                shouldValidate:true,
+                shouldDirty:true
+              }
+            );
+
+
+          }}
+
+
+
+          error={
+            !!errors.country
+          }
+
+
+
+          helperText={
+            errors.country?.message
+          }
+
 
         >
+
+
 
           <MenuItem value="India">
             India
@@ -147,7 +273,14 @@ function AddressDetails() {
           </MenuItem>
 
 
+          <MenuItem value="UK">
+            UK
+          </MenuItem>
+
+
+
         </TextField>
+
 
       </Grid>
 
@@ -156,7 +289,14 @@ function AddressDetails() {
 
 
 
-      <Grid xs={12} md={6}>
+
+
+
+      {/* Pincode */}
+
+
+      <Grid item xs={12} md={6}>
+
 
         <TextField
 
@@ -164,18 +304,53 @@ function AddressDetails() {
 
           label="Pincode"
 
+
           {...register("pincode")}
 
-          error={!!errors.pincode}
 
-          helperText={errors.pincode?.message}
+
+          inputProps={{
+            maxLength:6
+          }}
+
+
+
+          onInput={(e)=>{
+
+
+            e.target.value =
+            e.target.value.replace(
+              /[^0-9]/g,
+              ""
+            );
+
+
+          }}
+
+
+
+          error={
+            !!errors.pincode
+          }
+
+
+
+          helperText={
+            errors.pincode?.message
+          }
+
+
 
         />
+
 
       </Grid>
 
 
+
+
     </Grid>
+
 
   );
 

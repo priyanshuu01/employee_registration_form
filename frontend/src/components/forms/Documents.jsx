@@ -1,352 +1,212 @@
 import { useRef, useState } from "react";
+import Webcam from "react-webcam";
 
 import {
   Button,
   Grid,
   Typography,
-  TextField
+  FormHelperText,
+  Box
 } from "@mui/material";
 
-import {
-  useFormContext
-} from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
+function Documents() {
+  const {
+    setValue,
+    setError,
+    clearErrors,
+    formState: { errors }
+  } = useFormContext();
 
+  const webcamRef = useRef(null);
 
-function Documents(){
+  const [preview, setPreview] = useState(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
 
+  // Upload Photo
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
 
-const {
-  setValue,
-  formState:{
-    errors
-  }
-}=useFormContext();
+    if (!file) return;
 
+    if (!file.type.startsWith("image/")) {
+      setError("profilePhoto", {
+        type: "manual",
+        message: "Only image files are allowed."
+      });
+      return;
+    }
 
+    clearErrors("profilePhoto");
 
-const [preview,setPreview]=useState(null);
+    setValue("profilePhoto", file, {
+      shouldValidate: true
+    });
 
+    setPreview(URL.createObjectURL(file));
+  };
 
-const cameraRef = useRef();
+  // Capture Photo
+  const capturePhoto = () => {
+    const imageSrc = webcamRef.current.getScreenshot();
 
+    if (!imageSrc) return;
 
+    fetch(imageSrc)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const file = new File(
+          [blob],
+          "profile-photo.png",
+          {
+            type: "image/png"
+          }
+        );
 
+        clearErrors("profilePhoto");
 
+        setValue("profilePhoto", file, {
+          shouldValidate: true
+        });
 
-// Upload Photo
+        setPreview(imageSrc);
 
-const handlePhotoUpload=(e)=>{
+        setCameraOpen(false);
+      });
+  };
 
+  // Resume Upload
+  const handleResumeUpload = (e) => {
+    const file = e.target.files[0];
 
-const file=e.target.files[0];
+    if (!file) return;
 
+    if (file.type !== "application/pdf") {
+      setError("resume", {
+        type: "manual",
+        message: "Only PDF files are allowed."
+      });
+      return;
+    }
 
-if(file){
+    clearErrors("resume");
 
+    setValue("resume", file, {
+      shouldValidate: true
+    });
+  };
 
-setValue(
-"profilePhoto",
-file,
-{
-shouldValidate:true
+  return (
+    <Grid container spacing={3} sx={{ mt: 3 }}>
+      {/* Profile Photo */}
+      <Grid size={12}>
+        <Typography variant="h6" gutterBottom>
+          Profile Photo
+        </Typography>
+
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handlePhotoUpload}
+        />
+
+        <Button
+          variant="contained"
+          sx={{ ml: 2 }}
+          onClick={() => setCameraOpen(true)}
+        >
+          Open Camera
+        </Button>
+
+        {cameraOpen && (
+          <Box sx={{ mt: 3 }}>
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/png"
+              width={320}
+              style={{
+                borderRadius: "10px"
+              }}
+            />
+
+            <Box sx={{ mt: 2 }}>
+              <Button
+                variant="contained"
+                onClick={capturePhoto}
+              >
+                Capture Photo
+              </Button>
+
+              <Button
+                color="error"
+                variant="outlined"
+                sx={{ ml: 2 }}
+                onClick={() => setCameraOpen(false)}
+              >
+                Cancel
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        {preview && (
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="subtitle1">
+              Photo Preview
+            </Typography>
+
+            <img
+              src={preview}
+              alt="Profile"
+              width={180}
+              height={180}
+              style={{
+                borderRadius: "10px",
+                objectFit: "cover",
+                marginTop: "10px"
+              }}
+            />
+
+            <Box sx={{ mt: 2 }}>
+              <Button
+                color="warning"
+                variant="outlined"
+                onClick={() => {
+                  setPreview(null);
+                  setCameraOpen(true);
+                }}
+              >
+                Retake Photo
+              </Button>
+            </Box>
+          </Box>
+        )}
+
+        <FormHelperText error>
+          {errors.profilePhoto?.message}
+        </FormHelperText>
+      </Grid>
+
+      {/* Resume */}
+      <Grid size={12}>
+        <Typography variant="h6" gutterBottom>
+          Upload Resume (PDF Only)
+        </Typography>
+
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleResumeUpload}
+        />
+
+        <FormHelperText error>
+          {errors.resume?.message}
+        </FormHelperText>
+      </Grid>
+    </Grid>
+  );
 }
-);
-
-
-setPreview(
-URL.createObjectURL(file)
-);
-
-
-}
-
-
-};
-
-
-
-
-
-
-
-// Camera Capture
-
-const handleCameraCapture=()=>{
-
-
-navigator.mediaDevices
-.getUserMedia({
-video:true
-})
-.then(stream=>{
-
-
-const video=document.createElement("video");
-
-
-video.srcObject=stream;
-
-
-video.play();
-
-
-
-setTimeout(()=>{
-
-
-const canvas=document.createElement("canvas");
-
-
-canvas.width=300;
-
-canvas.height=300;
-
-
-
-canvas
-.getContext("2d")
-.drawImage(
-video,
-0,
-0,
-300,
-300
-);
-
-
-
-canvas.toBlob((blob)=>{
-
-
-const file=new File(
-[blob],
-"profile-photo.png",
-{
-type:"image/png"
-}
-);
-
-
-
-setValue(
-"profilePhoto",
-file,
-{
-shouldValidate:true
-}
-);
-
-
-
-setPreview(
-URL.createObjectURL(file)
-);
-
-
-
-stream
-.getTracks()
-.forEach(
-track=>track.stop()
-);
-
-
-
-});
-
-
-},1000);
-
-
-
-});
-
-
-};
-
-
-
-
-
-
-
-
-// Resume Upload
-
-const handleResumeUpload=(e)=>{
-
-
-const file=e.target.files[0];
-
-
-if(file){
-
-
-setValue(
-
-"resume",
-
-file,
-
-{
-shouldValidate:true
-}
-
-);
-
-
-}
-
-
-};
-
-
-
-
-
-
-
-
-return(
-
-<Grid container spacing={3}>
-
-
-<Grid item xs={12}>
-
-
-<Typography variant="h6">
-
-Profile Photo
-
-</Typography>
-
-
-<input
-
-type="file"
-
-accept="image/*"
-
-onChange={handlePhotoUpload}
-
-/>
-
-
-
-<Button
-
-variant="contained"
-
-onClick={handleCameraCapture}
-
-sx={{
-mt:2
-}}
-
->
-
-Capture Photo
-
-</Button>
-
-
-
-{
-preview &&
-
-<img
-
-src={preview}
-
-width="150"
-
-height="150"
-
-style={{
-display:"block",
-marginTop:"15px",
-borderRadius:"10px"
-}}
-
-/>
-
-}
-
-
-
-{
-errors.profilePhoto &&
-
-<p style={{color:"red"}}>
-
-{errors.profilePhoto.message}
-
-</p>
-
-}
-
-
-
-</Grid>
-
-
-
-
-
-
-
-
-<Grid item xs={12}>
-
-
-<Typography variant="h6">
-
-Upload Resume
-
-</Typography>
-
-
-
-<input
-
-type="file"
-
-accept=".pdf,.doc,.docx"
-
-onChange={handleResumeUpload}
-
-/>
-
-
-
-{
-errors.resume &&
-
-<p style={{color:"red"}}>
-
-{errors.resume.message}
-
-</p>
-
-}
-
-
-
-</Grid>
-
-
-
-
-
-</Grid>
-
-
-);
-
-
-}
-
 
 export default Documents;
