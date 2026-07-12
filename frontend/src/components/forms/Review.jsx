@@ -1,186 +1,300 @@
 import {
-  Grid,
   Paper,
   Typography,
-  Divider,
+  Grid,
+  Box,
+  Avatar,
   Button,
-  Box
+  Divider
 } from "@mui/material";
+
+
+import {
+  Person,
+  Home,
+  Work,
+  Description,
+  Edit
+} from "@mui/icons-material";
+
 
 import {
   useFormContext
 } from "react-hook-form";
 
-import {
-  useEffect,
-  useState
-} from "react";
 
 
 
-function Review(){
+function Review({goToStep}){
 
 
-  const {
-    watch
-  } = useFormContext();
+const {
+  getValues
+}=useFormContext();
 
 
 
-  const data = watch();
+const data=getValues();
 
 
 
-  const [photoPreview,setPhotoPreview] = useState(null);
 
-  const [resumeURL,setResumeURL] = useState(null);
 
+const DetailRow=({label,value})=>(
 
+<Box
 
+display="flex"
 
-
-  // Profile Photo Preview
-
-  useEffect(()=>{
-
-
-    if(data.profilePhoto){
-
-
-      const url = URL.createObjectURL(
-        data.profilePhoto
-      );
-
-
-      setPhotoPreview(url);
-
-
-
-      return ()=>{
-
-        URL.revokeObjectURL(url);
-
-      };
-
-    }
-
-
-  },[data.profilePhoto]);
-
-
-
-
-
-
-  // Resume URL
-
-  useEffect(()=>{
-
-
-    if(data.resume){
-
-
-      const url = URL.createObjectURL(
-        data.resume
-      );
-
-
-      setResumeURL(url);
-
-
-
-      return ()=>{
-
-        URL.revokeObjectURL(url);
-
-      };
-
-
-    }
-
-
-  },[data.resume]);
-
-
-
-
-
-
-
-
-  return (
-
-
-<Grid container spacing={3}>
-
-
-<Grid item xs={12}>
-
-
-<Paper
-
-elevation={3}
+justifyContent="space-between"
 
 sx={{
-padding:3
+
+mb:1.5
+
 }}
 
 >
 
 
-<Typography variant="h5">
+<Typography
 
-Employee Details Review
+color="text.secondary"
+
+>
+
+{label}
 
 </Typography>
 
 
 
+<Typography
+
+fontWeight="500"
+
+>
+
+{value || "-"}
+
+</Typography>
+
+
+
+</Box>
+
+);
+
+
+
+
+
+
+
+
+
+const Section=({
+
+title,
+
+icon,
+
+step,
+
+children
+
+})=>(
+
+
+<Box
+
+sx={{
+
+mt:3
+
+}}
+
+>
+
+
+<Box
+
+display="flex"
+
+alignItems="center"
+
+justifyContent="space-between"
+
+mb={2}
+
+>
+
+
+<Box
+
+display="flex"
+
+alignItems="center"
+
+gap={1}
+
+>
+
+
+{icon}
+
+
+<Typography
+
+variant="h6"
+
+fontWeight="bold"
+
+>
+
+{title}
+
+</Typography>
+
+
+</Box>
+
+
+
+
+<Button
+
+size="small"
+
+startIcon={<Edit/>}
+
+onClick={()=>goToStep(step)}
+
+>
+
+Edit
+
+</Button>
+
+
+
+</Box>
+
+
+
+
+{children}
+
+
 
 <Divider
+
 sx={{
-my:2
+
+mt:3
+
 }}
+
+/>
+
+
+</Box>
+
+
+);
+
+
+
+
+
+
+
+
+
+return(
+
+
+
+<Paper
+
+elevation={5}
+
+sx={{
+
+mt:4,
+
+p:5,
+
+borderRadius:4
+
+}}
+
+>
+
+
+
+
+
+{/* Header */}
+
+
+
+<Box
+
+display="flex"
+
+alignItems="center"
+
+gap={3}
+
+mb={4}
+
+>
+
+
+
+<Avatar
+
+
+src={
+
+data.profilePhoto
+
+?
+
+URL.createObjectURL(data.profilePhoto)
+
+:
+
+""
+
+}
+
+
+sx={{
+
+width:110,
+
+height:110
+
+}}
+
 />
 
 
 
 
 
-<Typography>
-
-<strong>Public ID:</strong>{" "}
-
-{
-data.publicId ||
-"Will be generated after submission"
-}
-
-</Typography>
-
-
-
-
-
-{/* Personal Details */}
+<Box>
 
 
 <Typography
-variant="h6"
-sx={{
-mt:3
-}}
+
+variant="h4"
+
+fontWeight="bold"
+
 >
-
-Personal Details
-
-</Typography>
-
-
-
-<Typography>
-
-<strong>Name:</strong>{" "}
 
 {data.firstName} {data.lastName}
 
@@ -188,289 +302,409 @@ Personal Details
 
 
 
-<Typography>
+<Typography
 
-<strong>Email:</strong>{" "}
+color="text.secondary"
 
-{data.email}
+>
 
-</Typography>
-
-
-
-
-<Typography>
-
-<strong>Phone:</strong>{" "}
-
-{data.phone}
+Employee ID : {data.employeeId}
 
 </Typography>
-
-
-
-
-<Typography>
-
-<strong>Gender:</strong>{" "}
-
-{data.gender}
-
-</Typography>
-
-
-
-
-<Typography>
-
-<strong>Blood Group:</strong>{" "}
-
-{data.bloodGroup}
-
-</Typography>
-
-
-
-
-
-
-<Divider
-sx={{
-my:2
-}}
-/>
-
-
-
-
-
-
-{/* Address Details */}
-
-
-
-<Typography variant="h6">
-
-Address Details
-
-</Typography>
-
-
-
-
-<Typography>
-
-{data.address}
-
-</Typography>
-
-
-
-<Typography>
-
-{data.city}, {data.state}
-
-</Typography>
-
-
-
-<Typography>
-
-{data.country} - {data.pincode}
-
-</Typography>
-
-
-
-
-
-
-<Divider
-sx={{
-my:2
-}}
-/>
-
-
-
-
-
-
-{/* Job Details */}
-
-
-
-<Typography variant="h6">
-
-Job Details
-
-</Typography>
-
-
-
-
-<Typography>
-
-<strong>Employee ID:</strong>{" "}
-
-{data.employeeId}
-
-</Typography>
-
-
-
-
-<Typography>
-
-<strong>Department:</strong>{" "}
-
-{data.department}
-
-</Typography>
-
-
-
-
-<Typography>
-
-<strong>Job Type:</strong>{" "}
-
-{data.jobType}
-
-</Typography>
-
-
-
-
-<Typography>
-
-<strong>Salary:</strong>{" "}
-
-{data.salary}
-
-</Typography>
-
-
-
-
-
-
-
-<Divider
-sx={{
-my:2
-}}
-/>
-
-
-
-
-
-
-
-{/* Documents */}
-
-
-
-<Typography variant="h6">
-
-Documents
-
-</Typography>
-
-
-
-
-
-
-{
-photoPreview &&
-
-
-<Box
-
-component="img"
-
-src={photoPreview}
-
-alt="Profile"
-
-sx={{
-
-width:150,
-
-height:150,
-
-objectFit:"cover",
-
-borderRadius:"10px",
-
-mt:2
-
-}}
-
-
-/>
-
-
-}
-
-
 
 
 
 
 <Typography
-sx={{
-mt:2
-}}
+
+color="text.secondary"
+
 >
 
-
-<strong>Resume:</strong>{" "}
-
-{
-data.resume?.name || "Not uploaded"
-}
-
+Public ID : {data.publicId}
 
 </Typography>
 
 
+</Box>
+
+
+
+</Box>
 
 
 
 
 
-{
-resumeURL &&
+<Divider/>
 
 
-<Button
 
-variant="outlined"
 
-component="a"
 
-href={resumeURL}
 
-target="_blank"
 
-download={data.resume?.name}
 
-sx={{
-mt:2
-}}
+
+{/* Personal Section */}
+
+
+
+<Section
+
+title="Personal Information"
+
+icon={<Person color="primary"/>}
+
+step={0}
 
 >
 
-View / Download Resume
 
 
-</Button>
+<Grid
+
+container
+
+spacing={4}
+
+>
 
 
-}
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<DetailRow
+
+label="Email"
+
+value={data.email}
+
+/>
+
+
+<DetailRow
+
+label="Phone"
+
+value={data.phone}
+
+/>
+
+
+</Grid>
+
+
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<DetailRow
+
+label="Gender"
+
+value={data.gender}
+
+/>
+
+
+<DetailRow
+
+label="Blood Group"
+
+value={data.bloodGroup}
+
+/>
+
+
+</Grid>
+
+
+
+</Grid>
+
+
+</Section>
+
+
+
+
+
+
+
+
+
+{/* Address Section */}
+
+
+
+<Section
+
+title="Address Information"
+
+icon={<Home color="primary"/>}
+
+step={1}
+
+>
+
+
+<Grid
+
+container
+
+spacing={4}
+
+>
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<DetailRow
+
+label="Address"
+
+value={data.address}
+
+/>
+
+
+
+<DetailRow
+
+label="City"
+
+value={data.city}
+
+/>
+
+
+
+</Grid>
+
+
+
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<DetailRow
+
+label="State"
+
+value={data.state}
+
+/>
+
+
+<DetailRow
+
+label="Country"
+
+value={data.country}
+
+/>
+
+
+<DetailRow
+
+label="Pincode"
+
+value={data.pincode}
+
+/>
+
+
+</Grid>
+
+
+
+</Grid>
+
+
+</Section>
+
+
+
+
+
+
+
+
+
+{/* Job Section */}
+
+
+
+<Section
+
+title="Employment Information"
+
+icon={<Work color="primary"/>}
+
+step={2}
+
+>
+
+
+
+<Grid
+
+container
+
+spacing={4}
+
+>
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<DetailRow
+
+label="Department"
+
+value={data.department}
+
+/>
+
+
+<DetailRow
+
+label="Job Type"
+
+value={data.jobType}
+
+/>
+
+
+
+</Grid>
+
+
+
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<DetailRow
+
+label="Salary"
+
+value={`₹ ${data.salary}`}
+
+/>
+
+
+
+</Grid>
+
+
+
+</Grid>
+
+
+</Section>
+
+
+
+
+
+
+
+
+
+{/* Documents Section */}
+
+
+
+<Section
+
+title="Documents"
+
+icon={<Description color="primary"/>}
+
+step={3}
+
+>
+
+
+
+<DetailRow
+
+label="Profile Photo"
+
+value={data.profilePhoto?.name}
+
+/>
+
+
+
+<DetailRow
+
+label="Resume"
+
+value={data.resume?.name}
+
+/>
+
+
+
+</Section>
+
+
 
 
 
@@ -480,13 +714,9 @@ View / Download Resume
 </Paper>
 
 
-</Grid>
 
+);
 
-</Grid>
-
-
-  );
 
 }
 

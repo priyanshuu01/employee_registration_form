@@ -1,0 +1,139 @@
+.job-container{
+
+    margin-top:30px;
+
+    padding:35px;
+
+    border-radius:22px !important;
+
+    background:
+    linear-gradient(
+        145deg,
+        #ffffff,
+        #f8fafc
+    );
+
+    border:1px solid #e5e7eb;
+
+    transition:0.3s ease;
+
+}
+
+
+.job-container:hover{
+
+    box-shadow:
+    0 20px 45px rgba(0,0,0,0.12);
+
+}
+
+
+
+.job-title{
+
+    font-size:24px !important;
+
+    font-weight:700 !important;
+
+    margin-bottom:30px !important;
+
+    color:#1e293b;
+
+}
+
+
+
+.job-input .MuiOutlinedInput-root{
+
+    border-radius:14px;
+
+    background:#ffffff;
+
+}
+
+
+
+.job-input 
+.MuiOutlinedInput-root:hover fieldset{
+
+    border-color:#2563eb;
+
+}
+
+
+
+.job-input 
+.MuiOutlinedInput-root.Mui-focused fieldset{
+
+    border-width:2px;
+
+    border-color:#2563eb;
+
+}
+
+
+
+.job-icon{
+
+    color:#2563eb;
+
+}
+
+
+
+.job-card{
+
+    padding:18px;
+
+    border-radius:15px !important;
+
+    cursor:pointer;
+
+    border:1px solid #e2e8f0;
+
+    transition:0.25s ease;
+
+}
+
+
+
+.job-card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(0,0,0,0.1);
+
+}
+
+
+
+.job-card.active{
+
+    border:
+
+    2px solid #2563eb;
+
+    background:#eff6ff;
+
+}
+
+
+
+.job-card-title{
+
+    font-weight:600;
+
+    color:#334155;
+
+}
+
+
+
+.salary-label{
+
+    font-weight:600;
+
+    color:#475569;
+
+}

@@ -1,0 +1,144 @@
+.documents-container{
+
+    margin-top:30px;
+
+    padding:35px;
+
+    border-radius:22px !important;
+
+    background:
+    linear-gradient(
+        145deg,
+        #ffffff,
+        #f8fafc
+    );
+
+    border:1px solid #e5e7eb;
+
+}
+
+
+
+.documents-title{
+
+    font-size:24px !important;
+
+    font-weight:700 !important;
+
+    margin-bottom:30px !important;
+
+    color:#1e293b;
+
+}
+
+
+
+.upload-card{
+
+    padding:30px;
+
+    border-radius:20px !important;
+
+    border:2px dashed #cbd5e1;
+
+    text-align:center;
+
+    cursor:pointer;
+
+    transition:0.3s ease;
+
+    background:#ffffff;
+
+}
+
+
+
+.upload-card:hover{
+
+    border-color:#2563eb;
+
+    background:#eff6ff;
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.upload-icon{
+
+    font-size:45px !important;
+
+    color:#2563eb;
+
+    margin-bottom:15px;
+
+}
+
+
+
+.upload-title{
+
+    font-weight:600 !important;
+
+    color:#334155;
+
+}
+
+
+
+.upload-subtitle{
+
+    color:#64748b;
+
+    font-size:14px !important;
+
+}
+
+
+
+.file-name{
+
+    margin-top:15px !important;
+
+    padding:10px;
+
+    border-radius:10px;
+
+    background:#f1f5f9;
+
+    color:#334155;
+
+    font-size:14px !important;
+
+}
+
+
+
+.preview-image{
+
+    width:120px;
+
+    height:120px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    margin-top:15px;
+
+    border:4px solid #2563eb;
+
+}
+
+
+
+.error-text{
+
+    color:#dc2626;
+
+    font-size:13px !important;
+
+    margin-top:10px !important;
+
+}

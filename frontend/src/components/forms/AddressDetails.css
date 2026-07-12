@@ -1,0 +1,107 @@
+.address-container{
+
+    margin-top:30px;
+    padding:35px;
+
+    border-radius:22px !important;
+
+    background:
+    linear-gradient(
+        145deg,
+        #ffffff,
+        #f8fafc
+    );
+
+    border:
+    1px solid #e5e7eb;
+
+    transition:0.3s ease;
+
+}
+
+
+
+.address-container:hover{
+
+    box-shadow:
+    0 20px 45px rgba(0,0,0,0.12);
+
+}
+
+
+
+.address-title{
+
+    font-size:24px !important;
+
+    font-weight:700 !important;
+
+    margin-bottom:30px !important;
+
+    color:#1e293b;
+
+}
+
+
+
+.address-input .MuiOutlinedInput-root{
+
+
+    border-radius:14px;
+
+    background:#ffffff;
+
+
+}
+
+
+
+.address-input 
+.MuiOutlinedInput-root:hover fieldset{
+
+
+    border-color:#2563eb;
+
+
+}
+
+
+
+.address-input 
+.MuiOutlinedInput-root.Mui-focused fieldset{
+
+
+    border-width:2px;
+
+    border-color:#2563eb;
+
+
+}
+
+
+
+.location-icon{
+
+    color:#2563eb;
+
+}
+
+
+
+.address-section-label{
+
+    font-weight:700 !important;
+
+    color:#475569 !important;
+
+}
+
+
+
+.error-text{
+
+    color:#dc2626;
+
+    font-size:13px;
+
+}

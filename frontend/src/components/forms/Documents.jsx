@@ -1,212 +1,952 @@
-import { useRef, useState } from "react";
-import Webcam from "react-webcam";
+
+
+
+import { useState, useRef } from "react";
 
 import {
-  Button,
   Grid,
+  Paper,
   Typography,
-  FormHelperText,
-  Box
+  Button,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  IconButton,
+  FormHelperText
 } from "@mui/material";
 
-import { useFormContext } from "react-hook-form";
 
-function Documents() {
-  const {
-    setValue,
-    setError,
-    clearErrors,
-    formState: { errors }
-  } = useFormContext();
+import {
+  CameraAlt,
+  UploadFile,
+  Delete
+} from "@mui/icons-material";
 
-  const webcamRef = useRef(null);
 
-  const [preview, setPreview] = useState(null);
-  const [cameraOpen, setCameraOpen] = useState(false);
+import {
+  useFormContext
+} from "react-hook-form";
 
-  // Upload Photo
-  const handlePhotoUpload = (e) => {
-    const file = e.target.files[0];
 
-    if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      setError("profilePhoto", {
-        type: "manual",
-        message: "Only image files are allowed."
-      });
-      return;
-    }
+function Documents(){
 
-    clearErrors("profilePhoto");
 
-    setValue("profilePhoto", file, {
-      shouldValidate: true
-    });
 
-    setPreview(URL.createObjectURL(file));
-  };
+const {
 
-  // Capture Photo
-  const capturePhoto = () => {
-    const imageSrc = webcamRef.current.getScreenshot();
+setValue,
 
-    if (!imageSrc) return;
+setError,
 
-    fetch(imageSrc)
-      .then((res) => res.blob())
-      .then((blob) => {
-        const file = new File(
-          [blob],
-          "profile-photo.png",
-          {
-            type: "image/png"
-          }
-        );
+clearErrors,
 
-        clearErrors("profilePhoto");
-
-        setValue("profilePhoto", file, {
-          shouldValidate: true
-        });
-
-        setPreview(imageSrc);
-
-        setCameraOpen(false);
-      });
-  };
-
-  // Resume Upload
-  const handleResumeUpload = (e) => {
-    const file = e.target.files[0];
-
-    if (!file) return;
-
-    if (file.type !== "application/pdf") {
-      setError("resume", {
-        type: "manual",
-        message: "Only PDF files are allowed."
-      });
-      return;
-    }
-
-    clearErrors("resume");
-
-    setValue("resume", file, {
-      shouldValidate: true
-    });
-  };
-
-  return (
-    <Grid container spacing={3} sx={{ mt: 3 }}>
-      {/* Profile Photo */}
-      <Grid size={12}>
-        <Typography variant="h6" gutterBottom>
-          Profile Photo
-        </Typography>
-
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handlePhotoUpload}
-        />
-
-        <Button
-          variant="contained"
-          sx={{ ml: 2 }}
-          onClick={() => setCameraOpen(true)}
-        >
-          Open Camera
-        </Button>
-
-        {cameraOpen && (
-          <Box sx={{ mt: 3 }}>
-            <Webcam
-              audio={false}
-              ref={webcamRef}
-              screenshotFormat="image/png"
-              width={320}
-              style={{
-                borderRadius: "10px"
-              }}
-            />
-
-            <Box sx={{ mt: 2 }}>
-              <Button
-                variant="contained"
-                onClick={capturePhoto}
-              >
-                Capture Photo
-              </Button>
-
-              <Button
-                color="error"
-                variant="outlined"
-                sx={{ ml: 2 }}
-                onClick={() => setCameraOpen(false)}
-              >
-                Cancel
-              </Button>
-            </Box>
-          </Box>
-        )}
-
-        {preview && (
-          <Box sx={{ mt: 3 }}>
-            <Typography variant="subtitle1">
-              Photo Preview
-            </Typography>
-
-            <img
-              src={preview}
-              alt="Profile"
-              width={180}
-              height={180}
-              style={{
-                borderRadius: "10px",
-                objectFit: "cover",
-                marginTop: "10px"
-              }}
-            />
-
-            <Box sx={{ mt: 2 }}>
-              <Button
-                color="warning"
-                variant="outlined"
-                onClick={() => {
-                  setPreview(null);
-                  setCameraOpen(true);
-                }}
-              >
-                Retake Photo
-              </Button>
-            </Box>
-          </Box>
-        )}
-
-        <FormHelperText error>
-          {errors.profilePhoto?.message}
-        </FormHelperText>
-      </Grid>
-
-      {/* Resume */}
-      <Grid size={12}>
-        <Typography variant="h6" gutterBottom>
-          Upload Resume (PDF Only)
-        </Typography>
-
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleResumeUpload}
-        />
-
-        <FormHelperText error>
-          {errors.resume?.message}
-        </FormHelperText>
-      </Grid>
-    </Grid>
-  );
+formState:{
+errors
 }
+
+}=useFormContext();
+
+
+
+
+
+
+const [preview,setPreview]=useState(null);
+
+
+const [openCamera,setOpenCamera]=useState(false);
+
+
+const videoRef=useRef(null);
+
+
+const canvasRef=useRef(null);
+
+
+
+
+
+
+// Upload Photo
+
+
+const handlePhotoUpload=(e)=>{
+
+
+const file=e.target.files[0];
+
+
+if(!file) return;
+
+
+
+
+if(!file.type.startsWith("image/")){
+
+
+setError(
+
+"profilePhoto",
+
+{
+
+type:"manual",
+
+message:"Only image files allowed"
+
+}
+
+);
+
+
+return;
+
+}
+
+
+
+clearErrors("profilePhoto");
+
+
+
+setValue(
+
+"profilePhoto",
+
+file,
+
+{
+
+shouldValidate:true
+
+}
+
+);
+
+
+
+setPreview(
+
+URL.createObjectURL(file)
+
+);
+
+
+
+};
+
+
+
+
+
+
+
+
+
+// Open Camera
+
+
+const openCameraModal=async()=>{
+
+
+setOpenCamera(true);
+
+
+
+try{
+
+
+const stream=
+
+await navigator.mediaDevices.getUserMedia({
+
+video:true
+
+});
+
+
+
+videoRef.current.srcObject=stream;
+
+
+
+}
+
+catch(error){
+
+
+alert(
+"Camera permission denied"
+);
+
+
+}
+
+
+
+};
+
+
+
+
+
+
+
+
+
+// Capture Photo
+
+
+const capturePhoto=()=>{
+
+
+const canvas=canvasRef.current;
+
+
+const video=videoRef.current;
+
+
+
+canvas.width=300;
+
+canvas.height=300;
+
+
+
+canvas
+
+.getContext("2d")
+
+.drawImage(
+
+video,
+
+0,
+
+0,
+
+300,
+
+300
+
+);
+
+
+
+
+
+canvas.toBlob((blob)=>{
+
+
+const file=new File(
+
+[blob],
+
+"profile-photo.png",
+
+{
+
+type:"image/png"
+
+}
+
+);
+
+
+
+
+setValue(
+
+"profilePhoto",
+
+file,
+
+{
+
+shouldValidate:true
+
+}
+
+);
+
+
+
+
+setPreview(
+
+URL.createObjectURL(file)
+
+);
+
+
+
+
+closeCamera();
+
+
+
+});
+
+
+};
+
+
+
+
+
+
+
+
+
+const closeCamera=()=>{
+
+
+if(videoRef.current?.srcObject){
+
+
+videoRef.current.srcObject
+
+.getTracks()
+
+.forEach(
+
+track=>track.stop()
+
+);
+
+
+}
+
+
+
+setOpenCamera(false);
+
+
+};
+
+
+
+
+
+
+
+
+
+// Resume Upload
+
+
+const handleResumeUpload=(e)=>{
+
+
+const file=e.target.files[0];
+
+
+if(!file)return;
+
+
+
+
+if(file.type!=="application/pdf"){
+
+
+setError(
+
+"resume",
+
+{
+
+type:"manual",
+
+message:"Only PDF files allowed"
+
+}
+
+);
+
+
+return;
+
+}
+
+
+
+clearErrors("resume");
+
+
+
+setValue(
+
+"resume",
+
+file,
+
+{
+
+shouldValidate:true
+
+}
+
+);
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+return(
+
+
+
+<Grid
+
+container
+
+spacing={3}
+
+sx={{
+
+mt:3
+
+}}
+
+>
+
+
+
+
+
+
+
+
+
+{/* Profile Photo */}
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<Paper
+
+elevation={4}
+
+sx={{
+
+p:4,
+
+borderRadius:3,
+
+textAlign:"center",
+
+height:"100%"
+
+}}
+
+>
+
+
+<CameraAlt
+
+fontSize="large"
+
+color="primary"
+
+/>
+
+
+<Typography
+
+variant="h6"
+
+fontWeight="bold"
+
+mt={1}
+
+>
+
+Profile Photo
+
+</Typography>
+
+
+
+
+
+<Box
+
+mt={3}
+
+>
+
+
+
+{
+
+preview &&
+
+<img
+
+src={preview}
+
+alt="profile"
+
+width="180"
+
+height="180"
+
+style={{
+
+borderRadius:"50%",
+
+objectFit:"cover"
+
+}}
+
+/>
+
+
+}
+
+
+
+
+
+{
+
+!preview &&
+
+<Box
+
+sx={{
+
+width:180,
+
+height:180,
+
+borderRadius:"50%",
+
+background:"#eee",
+
+display:"flex",
+
+alignItems:"center",
+
+justifyContent:"center",
+
+margin:"auto"
+
+}}
+
+>
+
+
+<CameraAlt
+
+fontSize="large"
+
+/>
+
+
+</Box>
+
+
+}
+
+
+
+</Box>
+
+
+
+
+
+
+
+
+
+<Button
+
+component="label"
+
+variant="outlined"
+
+sx={{
+
+mt:3
+
+}}
+
+>
+
+
+Upload Photo
+
+
+<input
+
+hidden
+
+type="file"
+
+accept="image/*"
+
+onChange={handlePhotoUpload}
+
+/>
+
+
+</Button>
+
+
+
+
+
+
+
+<Button
+
+variant="contained"
+
+sx={{
+
+mt:2,
+
+ml:2
+
+}}
+
+onClick={openCameraModal}
+
+>
+
+
+Open Camera
+
+
+</Button>
+
+
+
+
+
+
+
+<FormHelperText error>
+
+{errors.profilePhoto?.message}
+
+</FormHelperText>
+
+
+
+
+
+
+</Paper>
+
+
+</Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* Resume */}
+
+
+<Grid
+
+item
+
+xs={12}
+
+md={6}
+
+>
+
+
+<Paper
+
+elevation={4}
+
+sx={{
+
+p:4,
+
+borderRadius:3,
+
+textAlign:"center"
+
+}}
+
+>
+
+
+<UploadFile
+
+fontSize="large"
+
+color="primary"
+
+/>
+
+
+
+<Typography
+
+variant="h6"
+
+fontWeight="bold"
+
+mt={1}
+
+>
+
+Upload Resume
+
+</Typography>
+
+
+
+
+
+<Box
+
+sx={{
+
+border:"2px dashed #1976d2",
+
+borderRadius:3,
+
+p:4,
+
+mt:3
+
+}}
+
+>
+
+
+
+<Typography>
+
+Upload PDF Resume
+
+</Typography>
+
+
+
+
+
+
+<Button
+
+component="label"
+
+variant="contained"
+
+sx={{
+
+mt:2
+
+}}
+
+>
+
+
+Choose File
+
+
+<input
+
+hidden
+
+type="file"
+
+accept=".pdf"
+
+onChange={handleResumeUpload}
+
+/>
+
+
+</Button>
+
+
+
+</Box>
+
+
+
+
+
+<FormHelperText error>
+
+{errors.resume?.message}
+
+</FormHelperText>
+
+
+
+</Paper>
+
+
+</Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* Camera Modal */}
+
+
+
+<Dialog
+
+open={openCamera}
+
+onClose={closeCamera}
+
+maxWidth="sm"
+
+fullWidth
+
+>
+
+
+<DialogTitle>
+
+Capture Profile Photo
+
+</DialogTitle>
+
+
+
+
+<DialogContent>
+
+
+<video
+
+ref={videoRef}
+
+autoPlay
+
+width="100%"
+
+style={{
+
+borderRadius:"15px"
+
+}}
+
+/>
+
+
+
+<canvas
+
+ref={canvasRef}
+
+style={{
+
+display:"none"
+
+}}
+
+/>
+
+
+
+</DialogContent>
+
+
+
+
+<DialogActions>
+
+
+<Button
+
+onClick={closeCamera}
+
+>
+
+Cancel
+
+</Button>
+
+
+
+<Button
+
+variant="contained"
+
+onClick={capturePhoto}
+
+>
+
+Capture
+
+</Button>
+
+
+</DialogActions>
+
+
+
+</Dialog>
+
+
+
+
+
+
+
+
+</Grid>
+
+
+);
+
+
+
+}
+
 
 export default Documents;
